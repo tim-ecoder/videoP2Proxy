@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 	int delay = 10;
     while (1)
 	{
-		clientRun("", "admin", "111111");
+		clientRun("LAYDLWRCR5U953N9111A", "admin", "111111");
 		DPRINTF("Error, waiting %d seconds and trying again.\n", delay);
 		sleep(delay);
 	}
