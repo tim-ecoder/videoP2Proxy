@@ -18,7 +18,7 @@ Boolean iFramesOnly = False;
 static void announceStream(RTSPServer* rtspServer, ServerMediaSession* sms,
                            char const* streamName, char const* inputFileName); // fwd
 
-extern "C" void* min(void *) {
+extern "C" void* min1(void *) {
 	TaskScheduler* scheduler = BasicTaskScheduler::createNew();
 	env = BasicUsageEnvironment::createNew(*scheduler);
 
@@ -28,7 +28,7 @@ extern "C" void* min(void *) {
 	authDB->addUserRecord("username1", "password1");
 #endif
 
-	RTSPServer* rtspServer = RTSPServer::createNew(*env, MODE_RTSP, authDB);
+	RTSPServer* rtspServer = RTSPServer::createNew(*env, 554, authDB);
 	if (rtspServer == NULL) {
 		*env << "Failed to create RTSP server: " << env->getResultMsg() << "\n";
 		exit(1);
@@ -48,7 +48,7 @@ extern "C" void* min(void *) {
 		ServerMediaSession* sms
 			= ServerMediaSession::createNew(*env, streamName, streamName,
 			                                descriptionString);
-		sms->addSubsession(H264VideoFileServerMediaSubsession
+		sms->addSubsession(MPEG4VideoFileServerMediaSubsession
 		                   ::createNew(*env, inputFileName, reuseFirstSource));
 		rtspServer->addServerMediaSession(sms);
 

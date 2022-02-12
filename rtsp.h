@@ -1,6 +1,6 @@
 #ifndef RTSP_H_
 #define RTSP_H_
 
-void* min(void *);
+void* min1(void *);
 
 #endif
