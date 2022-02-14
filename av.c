@@ -78,7 +78,7 @@ void *thread_ReceiveVideo(void *arg)
 		{
 			AVFrame avFrame = readAvFrame(frameInfo, videoBuffer, &ret);
 
-			if (avFrame.videoHeight > 0 && avFrame.videoWidth > 0) {
+			if (avFrame.codec_id == 76) {
 				// getLog(&avFrame);
 				#ifdef GO_WRAPPER
 				CArrayToGoArray(videoBuffer, ret);
@@ -97,12 +97,7 @@ void *thread_ReceiveVideo(void *arg)
 					write(1, videoBuffer, ret);
 				}
 
-				#ifdef ENABLE_RTSP
-				if (MODE_RTSP > 0)
-				{
-					write(MODE_RTSP_FIFO, videoBuffer, ret);
-				}
-				#endif
+				write(MODE_RTSP_FIFO, videoBuffer, ret);
 
 				#pragma GCC diagnostic pop
 			}
