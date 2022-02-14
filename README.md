@@ -1,10 +1,12 @@
 # videoP2Proxy
-Proxy to enable Samsung SEP-5001RDP P2P only cameras () to work with standard protocols.  
+Proxy to enable Samsung SEP-5001RDP P2P (AVAPIs, IOTCAPIs) only cameras to work with standard protocols.  
 **Works without changing the firmware of the camera, original LCD-screen continue to work.**
 
 *** CAMERA_ID, USER, PASSWORD HARDCODED ***
 *** FOR DEVELOPERS ONLY ***
 *** BUILD WITH ANJUTA ***
+
+**** NO SOUND IMPLEMENTED ****
 
  Known working models
 -----------
