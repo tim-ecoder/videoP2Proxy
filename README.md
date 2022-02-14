@@ -1,5 +1,5 @@
 # videoP2Proxy
-Proxy to enable Samsung SEP-5001RDP P2P (AVAPIs, IOTCAPIs) only cameras to work with standard protocols.  
+Proxy to enable Samsung SEP-5002RDP (HANWHA TECHWIN) WISENET P2P (AVAPIs, IOTCAPIs) only cameras to work with RTSP protocol.
 **Works without changing the firmware of the camera, original LCD-screen continue to work.**
 
 *** CAMERA_ID, USER, PASSWORD HARDCODED ***
@@ -7,6 +7,7 @@ Proxy to enable Samsung SEP-5001RDP P2P (AVAPIs, IOTCAPIs) only cameras to work 
 *** BUILD WITH ANJUTA ***
 
 **** NO SOUND IMPLEMENTED ****
+**** LINUX ONLY ****
 
  Known working models
 -----------
