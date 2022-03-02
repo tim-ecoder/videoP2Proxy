@@ -15,7 +15,6 @@ AM_CFLAGS =\
 bin_PROGRAMS = videop2proxy
 
 videop2proxy_SOURCES = \
-	main.c \
 	av.c \
 	avframe.c \
 	client.c \
@@ -25,8 +24,14 @@ videop2proxy_SOURCES = \
 	av.h \
 	client.h \
 	common.h \
+	main.c \
+	WAVAudioFileServerMediaSubsession.cxx \
+	WAVAudioFileServerMediaSubsession.h \
 	rtsp.cxx \
-	rtsp.h
+	rtsp.h \
+	avframeinfo.h \
+	WAVAudioFileSource.h \
+	WAVAudioFileSource.cxx
 
 videop2proxy_LDFLAGS = \
 	-Wl,-rpath $(libdir) \

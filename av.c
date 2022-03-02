@@ -10,9 +10,12 @@
 
 #include "include/AVAPIs.h"
 #include "include/IOTCAPIs.h"
+#include "avframeinfo.h"
 
 int FRAME_INFO_SIZE = 64;
 int VIDEO_BUF_SIZE = 400000;
+
+#define AUDIO_BUF_SIZE 1024
 
 extern void CArrayToGoArray();
 
@@ -79,27 +82,8 @@ void *thread_ReceiveVideo(void *arg)
 			AVFrame avFrame = readAvFrame(frameInfo, videoBuffer, &ret);
 
 			if (avFrame.codec_id == 76) {
-				// getLog(&avFrame);
-				#ifdef GO_WRAPPER
-				CArrayToGoArray(videoBuffer, ret);
-				#endif
-
-
-
-				#pragma GCC diagnostic push
-				#pragma GCC diagnostic ignored "-Wunused-result"
-				
-				//unsigned char hexV[]={0x00,0x00,0x00,0x01,0x09,0x30};
-				//write(1, hexV, 6);
-
-				if (MODE_STDOUT == 1)
-				{
-					write(1, videoBuffer, ret);
-				}
 
 				write(MODE_RTSP_FIFO, videoBuffer, ret);
-
-				#pragma GCC diagnostic pop
 			}
 		}
 	}
@@ -108,15 +92,69 @@ void *thread_ReceiveVideo(void *arg)
 
 void *thread_ReceiveAudio(void *arg)
 {
-	DPRINTF("[ReceiveAudio] Running\n");
 
-	return 0;
-	// @TODO audio
-	for (;;)
+	int avIndex = *(int *)arg;
+
+	printf("[thread_ReceiveAudio] Starting....\n");
+
+	char buf[AUDIO_BUF_SIZE];
+	FRAMEINFO_t frameInfo;
+	unsigned int frmNo;
+	int ret;
+	printf("Start IPCAM audio stream OK![%d]\n", avIndex);
+	while (1)
 	{
-		// receive and broadcast
-		//usleep(5 * 1000);
+		
+		ret = avCheckAudioBuf(avIndex);
+		if(ret < 0) break;
+		if (ret < 10) // determined by audio frame rate
+		{
+			sleep(10);
+			continue;
+		}
+		ret = avRecvAudioData(avIndex, buf, AUDIO_BUF_SIZE, (char *)&frameInfo, sizeof(FRAMEINFO_t), &frmNo);
+
+		if (ret == AV_ER_SESSION_CLOSE_BY_REMOTE)
+		{
+			printf("[thread_ReceiveAudio] AV_ER_SESSION_CLOSE_BY_REMOTE\n");
+			break;
+		}
+		else if (ret == AV_ER_REMOTE_TIMEOUT_DISCONNECT)
+		{
+			printf("[thread_ReceiveAudio] AV_ER_REMOTE_TIMEOUT_DISCONNECT\n");
+			break;
+		}
+		else if (ret == IOTC_ER_INVALID_SID)
+		{
+			printf("[thread_ReceiveAudio] Session cant be used anymore\n");
+			break;
+		}
+		else if (ret == AV_ER_LOSED_THIS_FRAME)
+		{
+			printf("AV_ER_LOSED_THIS_FRAME[%d]\n", frmNo);
+			continue;
+		}
+		else if (ret < 0)
+		{
+			printf("Other error[%d]!!!\n", ret);
+			continue;
+		}
+		else
+		{
+			if (frameInfo.codec_id == 140)
+			{
+				//printf("FRAME[%d] ", ret);
+				write(MODE_RTSP_FIFO2, buf, ret);
+			}
+			else
+			{
+				//write(MODE_RTSP_FIFO2, buf, ret);
+				//printf("UNK[%d] ", ret);
+			}
+		}
+
 	}
+	printf("[thread_ReceiveAudio] thread exit\n");
 	return 0;
 }
 

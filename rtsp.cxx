@@ -6,6 +6,7 @@
 
 #include "liveMedia.hh"
 #include "BasicUsageEnvironment.hh"
+#include "WAVAudioFileServerMediaSubsession.h"
 
 UsageEnvironment* env;
 
@@ -21,10 +22,6 @@ extern "C" void* min1(void *) {
 	env = BasicUsageEnvironment::createNew(*scheduler);
 
 	UserAuthenticationDatabase* authDB = NULL;
-#ifdef ACCESS_CONTROL
-	authDB = new UserAuthenticationDatabase;
-	authDB->addUserRecord("username1", "password1");
-#endif
 
 	RTSPServer* rtspServer = RTSPServer::createNew(*env, 554, authDB);
 	if (rtspServer == NULL) {
@@ -32,33 +29,27 @@ extern "C" void* min1(void *) {
 		exit(1);
 	}
 
-	char const* descriptionString
-		= "Session streamed by " PACKAGE " (" PACKAGE_URL ")";
+	char const* descriptionString	= "Session streamed by " PACKAGE " (" PACKAGE_URL ")";
 
-	{
-		char const* streamName = "";
+	
+	char const* streamName = "";
 
-		int fd = open(MODE_RTSP_FIFO_FILE, O_RDONLY); // open inmediatelly to avoid hanging write process
-		close(fd);
+	int fd = open(MODE_RTSP_FIFO_FILE, O_RDONLY); // open inmediatelly to avoid hanging write process
+	close(fd);
+	int fd2 = open(MODE_RTSP_FIFO_FILE2, O_RDONLY); // open inmediatelly to avoid hanging write process
+	close(fd2);
 		
-		char const* inputFileName = MODE_RTSP_FIFO_FILE;
-		OutPacketBuffer::maxSize = 100000;
-		ServerMediaSession* sms
-			= ServerMediaSession::createNew(*env, streamName, streamName,
-			                                descriptionString);
-		sms->addSubsession(MPEG4VideoFileServerMediaSubsession
-		                   ::createNew(*env, inputFileName, reuseFirstSource));
-		rtspServer->addServerMediaSession(sms);
+	char const* inputFileName = MODE_RTSP_FIFO_FILE;
+	char const* inputFileName2 = MODE_RTSP_FIFO_FILE2;
+	OutPacketBuffer::maxSize = 100000;
+	ServerMediaSession* sms
+		= ServerMediaSession::createNew(*env, streamName, streamName,
+		                                descriptionString);
+	sms->addSubsession(MPEG4VideoFileServerMediaSubsession::createNew(*env, inputFileName, reuseFirstSource));
+	sms->addSubsession(WAVAudioFileServerMediaSubsession1::createNew(*env, inputFileName2, reuseFirstSource));
+	rtspServer->addServerMediaSession(sms);
 
-		announceStream(rtspServer, sms, streamName, inputFileName);
-	}
-
-	if (rtspServer->setUpTunnelingOverHTTP(80) || rtspServer->setUpTunnelingOverHTTP(8000) || rtspServer->setUpTunnelingOverHTTP(8080)) {
-		*env << "(Using port " << rtspServer->httpServerPortNum() << " for optional RTSP-over-HTTP tunneling.)\n";
-	} else {
-		*env << "(RTSP-over-HTTP tunneling is not available.)\n";
-	}
-	*env << "\n";
+	announceStream(rtspServer, sms, streamName, inputFileName);
 
 	env->taskScheduler().doEventLoop();
 }

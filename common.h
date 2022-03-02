@@ -10,9 +10,9 @@
 
 int MODE_RTSP, MODE_STDOUT;
 
-#ifdef ENABLE_RTSP
 char* MODE_RTSP_FIFO_FILE;
 int MODE_RTSP_FIFO;
-#endif
+char* MODE_RTSP_FIFO_FILE2;
+int MODE_RTSP_FIFO2;
 
 #endif
