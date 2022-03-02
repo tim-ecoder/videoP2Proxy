@@ -6,8 +6,11 @@ Proxy to enable Samsung SEP-5002RDP (HANWHA TECHWIN) WISENET P2P (AVAPIs, IOTCAP
 *** FOR DEVELOPERS ONLY ***
 *** BUILD WITH ANJUTA ***
 
-**** NO SOUND IMPLEMENTED ****
+**** SOUND IMPLEMENTED ****
+**** SOUND SETTINGS HARDCODED: PCM, 1ch, 8bit, 8000hz****
 **** LINUX ONLY ****
+
+!!!! NOT STABLE !!!!
 
  Known working models
 -----------

@@ -18,7 +18,6 @@
 #include "client.h"
 #include "rtsp.h"
 
-//void* play(void*); // forward
 
 int main(int argc, char *argv[]) {
 
@@ -58,7 +57,7 @@ int main(int argc, char *argv[]) {
 	MODE_RTSP_FIFO2 = open(MODE_RTSP_FIFO_FILE2, O_WRONLY);
 
 
-	DPRINTF("Starting proxy...\n");
+	DPRINTF("Starting liveMedia server as proxy...\n");
 	int delay = 10;
     while (1)
 	{

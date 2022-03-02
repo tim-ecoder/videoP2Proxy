@@ -41,7 +41,7 @@ WAVAudioFileSource1::createNew(UsageEnvironment& env, char const* fileName) {
 
     newSource->fFileSize = (unsigned)GetFileSize(fileName, fid);
 	*/
-	newSource->fFileSize = 1024000;
+	newSource->fFileSize = FILE_SIZE;
     return newSource;
   } while (0);
 
@@ -103,7 +103,6 @@ static Boolean get2Bytes(FILE* fid, u_int16_t& result) {//little-endian
 }
 
 static Boolean skipBytes(FILE* fid, int num) {
-	printf("WAV skipBytes\n");
   while (num-- > 0) {
     if (nextc == EOF) return False;
   }

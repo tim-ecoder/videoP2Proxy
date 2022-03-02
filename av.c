@@ -26,7 +26,7 @@ AVFrame lastFrame = {
 
 void *thread_ReceiveVideo(void *arg)
 {
-	DPRINTF("[ReceiveVideo] Running\n");
+	DPRINTF("[ReceiveVideo] Running...\n");
 
 	setvbuf(stdout, NULL, _IONBF, 0);
 
@@ -87,6 +87,7 @@ void *thread_ReceiveVideo(void *arg)
 			}
 		}
 	}
+	DPRINTF("[ReceiveVideo] Thread exit\n");
 	return 0;
 }
 
@@ -95,25 +96,31 @@ void *thread_ReceiveAudio(void *arg)
 
 	int avIndex = *(int *)arg;
 
-	printf("[thread_ReceiveAudio] Starting....\n");
+	printf("[ReceiveAudio] Running...\n");
 
 	char buf[AUDIO_BUF_SIZE];
 	FRAMEINFO_t frameInfo;
 	unsigned int frmNo;
 	int ret;
-	printf("Start IPCAM audio stream OK![%d]\n", avIndex);
+	//printf("Start IPCAM audio stream OK![%d]\n", avIndex);
 	while (1)
 	{
-		
+		/*
 		ret = avCheckAudioBuf(avIndex);
 		if(ret < 0) break;
 		if (ret < 10) // determined by audio frame rate
 		{
-			sleep(10);
+			sleep(100);
 			continue;
 		}
+	*/
 		ret = avRecvAudioData(avIndex, buf, AUDIO_BUF_SIZE, (char *)&frameInfo, sizeof(FRAMEINFO_t), &frmNo);
-
+		if(ret == AV_ER_DATA_NOREADY)
+		{
+			//DPRINTF("AV_ER_DATA_NOREADY[%d]\n", avIndex);
+			usleep(100);
+			continue;
+		}
 		if (ret == AV_ER_SESSION_CLOSE_BY_REMOTE)
 		{
 			printf("[thread_ReceiveAudio] AV_ER_SESSION_CLOSE_BY_REMOTE\n");
@@ -154,7 +161,7 @@ void *thread_ReceiveAudio(void *arg)
 		}
 
 	}
-	printf("[thread_ReceiveAudio] thread exit\n");
+	DPRINTF("[ReceiveAudio] Thread exit\n");
 	return 0;
 }
 

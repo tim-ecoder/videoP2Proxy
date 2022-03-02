@@ -129,7 +129,7 @@ FramedSource* WAVAudioFileServerMediaSubsession1
     unsigned bitsPerSecond = fSamplingFrequency*fBitsPerSample*fNumChannels;
 
     //fFileDuration = (float)((8.0*wavSource->numPCMBytes())/(fSamplingFrequency*fNumChannels*fBitsPerSample));
-	fFileDuration = 3000000000000;
+	fFileDuration = FIZE_DURATION;
     // Add in any filter necessary to transform the data prior to streaming:
     resultSource = wavSource; // by default
     if (fAudioFormat == WA_PCM) {
@@ -166,51 +166,52 @@ RTPSink* WAVAudioFileServerMediaSubsession1
   do {
     char const* mimeType;
     unsigned char payloadFormatCode = rtpPayloadTypeIfDynamic; // by default, unless a static RTP payload type can be used
-    if (fAudioFormat == WA_PCM) {
+    if (fAudioFormat == WA_PCM) 
+	{
       if (fBitsPerSample == 16) {
-	if (fConvertToULaw) {
-	  mimeType = "PCMU";
-	  if (fSamplingFrequency == 8000 && fNumChannels == 1) {
-	    payloadFormatCode = 0; // a static RTP payload type
-	  }
-	} else {
-	  mimeType = "L16";
-	  if (fSamplingFrequency == 44100 && fNumChannels == 2) {
-	    payloadFormatCode = 10; // a static RTP payload type
-	  } else if (fSamplingFrequency == 44100 && fNumChannels == 1) {
-	    payloadFormatCode = 11; // a static RTP payload type
-	  }
-	}
-      } else if (fBitsPerSample == 20) {
-	mimeType = "L20";
-      } else if (fBitsPerSample == 24) {
-	mimeType = "L24";
-      } else { // fBitsPerSample == 8 (we assume that fBitsPerSample == 4 is only for WA_IMA_ADPCM)
-	mimeType = "L8";
-      }
+			if (fConvertToULaw) {
+	  			mimeType = "PCMU";
+	  			if (fSamplingFrequency == 8000 && fNumChannels == 1) {
+	    			payloadFormatCode = 0; // a static RTP payload type
+	  				}
+			} else {
+	  			mimeType = "L16";
+		  		if (fSamplingFrequency == 44100 && fNumChannels == 2) {
+		    		payloadFormatCode = 10; // a static RTP payload type
+		  		} else if (fSamplingFrequency == 44100 && fNumChannels == 1) {
+		    		payloadFormatCode = 11; // a static RTP payload type
+	  			}
+			}
+    	} else if (fBitsPerSample == 20) {
+				mimeType = "L20";
+      	} else if (fBitsPerSample == 24) {
+			mimeType = "L24";
+      	} else { // fBitsPerSample == 8 (we assume that fBitsPerSample == 4 is only for WA_IMA_ADPCM)
+			mimeType = "L8";
+      	}
     } else if (fAudioFormat == WA_PCMU) {
       mimeType = "PCMU";
       if (fSamplingFrequency == 8000 && fNumChannels == 1) {
-	payloadFormatCode = 0; // a static RTP payload type
-      }
+		payloadFormatCode = 0; // a static RTP payload type
+      	}
     } else if (fAudioFormat == WA_PCMA) {
       mimeType = "PCMA";
       if (fSamplingFrequency == 8000 && fNumChannels == 1) {
-	payloadFormatCode = 8; // a static RTP payload type
-      }
+		payloadFormatCode = 8; // a static RTP payload type
+    	  }
     } else if (fAudioFormat == WA_IMA_ADPCM) {
       mimeType = "DVI4";
       // Use a static payload type, if one is defined:
       if (fNumChannels == 1) {
-	if (fSamplingFrequency == 8000) {
-	  payloadFormatCode = 5; // a static RTP payload type
-	} else if (fSamplingFrequency == 16000) {
-	  payloadFormatCode = 6; // a static RTP payload type
-	} else if (fSamplingFrequency == 11025) {
-	  payloadFormatCode = 16; // a static RTP payload type
-	} else if (fSamplingFrequency == 22050) {
-	  payloadFormatCode = 17; // a static RTP payload type
-	}
+		if (fSamplingFrequency == 8000) {
+		  payloadFormatCode = 5; // a static RTP payload type
+		} else if (fSamplingFrequency == 16000) {
+		  payloadFormatCode = 6; // a static RTP payload type
+		} else if (fSamplingFrequency == 11025) {
+		  payloadFormatCode = 16; // a static RTP payload type
+		} else if (fSamplingFrequency == 22050) {
+		  payloadFormatCode = 17; // a static RTP payload type
+		}
       }
     } else { //unknown format
       break;
@@ -227,7 +228,10 @@ RTPSink* WAVAudioFileServerMediaSubsession1
   return NULL;
 }
 
-void WAVAudioFileServerMediaSubsession1::testScaleFactor(float& scale) {
+void WAVAudioFileServerMediaSubsession1::testScaleFactor(float& scale) 
+{
+	//scale = 1;
+	
   if (fFileDuration <= 0.0) {
     // The file is non-seekable, so is probably a live input source.
     // We don't support scale factors other than 1
@@ -238,6 +242,7 @@ void WAVAudioFileServerMediaSubsession1::testScaleFactor(float& scale) {
     if (iScale == 0) iScale = 1;
     scale = (float)iScale;
   }
+
 }
 
 float WAVAudioFileServerMediaSubsession1::duration() const {

@@ -27,10 +27,12 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 #include "AudioInputDevice.hh"
 #endif
 
+#define FILE_SIZE 0
+#define FIZE_DURATION 0
 #define BITS_PER_SAMPLE 8
 #define NUM_CHANNELS 1
-#define SAMPLING_FREQ 44100
-#define AUDIO_FORMAT 0x01
+#define SAMPLING_FREQ 16000
+#define AUDIO_FORMAT 0x01 // WA_PCM
 
 typedef enum {
   WA_PCM = 0x01,
