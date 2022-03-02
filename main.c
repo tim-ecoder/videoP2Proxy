@@ -18,9 +18,63 @@
 #include "client.h"
 #include "rtsp.h"
 
+void print_usage() {
+    printf(
+    		"Usage: videop2proxy --cam-id LAYDLWRCR5U953N9111A --cam-login admin -cam-pass 1111111111 [...] \n"
+    		"\n"
+    		"Options:\n"
+    		"  --cam-id CAMERA-P2P-UID		[Required] Camera UID address (Like: LAYDLWRCR5U953N9111A). Written on camera.\n"
+    		"  --cam-login CAMERA-P2P-LOGIN		[Required] Camera p2p login. (SEP-500: \"admin\" hardcoded on camera)\n"
+            "  --cam-pass CAMERA-P2P-PASSWORD	[Required] Camera p2p password. (SEP-500: \"000000\" default if not changed)\n"
+			"  --rtsp-port RTSP-PORT         	[OPTIONAL] RTSP server port. If not set DEFAULT: 554\n"
+    );
+}
 
 int main(int argc, char *argv[]) {
+	
 
+
+   static struct option long_options[] = {
+        {"cam-id",      required_argument, 0,  'i' },
+        {"cam-login",   required_argument, 0,  'l' },
+		{"cam-pass",    required_argument, 0,  'p' },
+		{"rtsp-port",   optional_argument, 0,  'r' },
+        {0,        0,                 0,  0   }
+    };
+
+	char* cam_id = "";
+	char* cam_login = "";
+	char* cam_pass = "";
+	int rtsp_port = 0;
+
+
+	
+	int opt = 0;
+    int long_index = 0;
+	char optc = 0;
+	
+    while ((opt = getopt_long(argc, argv,"i:l:p:r::", long_options, &long_index )) != -1) 
+	{
+		optc = (char)opt;
+		
+        switch (optc) {
+             case 'i' : 
+				cam_id = optarg;
+                break;
+             case 'l' : 
+				cam_login = optarg;
+                break;
+             case 'p' : 
+				cam_pass = optarg;
+                break;
+             case 'r' : 
+				rtsp_port = atoi(optarg);
+                break;
+             default: 
+				print_usage();
+                return 0;
+        }
+    }
 
 	char template[] = "/tmp/videop2proxy_v.XXXXXX";
 	char* tmpDir = mkdtemp(template);
@@ -61,7 +115,8 @@ int main(int argc, char *argv[]) {
 	int delay = 10;
     while (1)
 	{
-		clientRun("LAYDLWRCR5U953N9111A", "admin", "111111");
+		//clientRun("LAYDLWRCR5U953N9111A", "admin", "111111");
+		clientRun(cam_id, cam_login, cam_pass);
 		DPRINTF("Error, waiting %d seconds and trying again.\n", delay);
 		sleep(delay);
 	}

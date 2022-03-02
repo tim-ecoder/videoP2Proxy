@@ -216,9 +216,8 @@ RTPSink* WAVAudioFileServerMediaSubsession1
     } else { //unknown format
       break;
     }
-	//payloadFormatCode = 11;
 	
-	printf("CREATE_SINK OK P/l %d Mine %s\n", payloadFormatCode, mimeType);
+	//printf("CREATE_SINK OK P/l %d Mine %s\n", payloadFormatCode, mimeType);
     return SimpleRTPSink::createNew(envir(), rtpGroupsock,
 				    payloadFormatCode, fSamplingFrequency,
 				    "audio", mimeType, fNumChannels);
