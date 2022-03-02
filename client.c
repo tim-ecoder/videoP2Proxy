@@ -25,8 +25,8 @@ int clientRun(char* p2p_id, char* userName, char* passWord)
 	int avIndex = 0;
     if (enterIOTC(&avIndex, p2p_id, userName, passWord) && startIOTC(&avIndex)) {
         DPRINTF("[P2P client] running\n");
-
-        return startReceive(&avIndex);
+		startReceive(&avIndex);
+        return 1;
     } else {
         DPRINTF("P2P communication error\n");
 		return 1;

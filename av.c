@@ -49,17 +49,13 @@ void *thread_ReceiveVideo(void *arg)
 		if(ret == AV_ER_DATA_NOREADY)
 		{
 			//DPRINTF("AV_ER_DATA_NOREADY[%d]\n", avIndex);
-			usleep(10 * 1000);
+			usleep(100);
 			continue;
 		}
 		else if(ret == AV_ER_LOSED_THIS_FRAME)
 		{
 			DPRINTF("Lost video frame NO[%d]\n", frmNo);
 			continue;
-		}
-		else if(ret == AV_ER_INCOMPLETE_FRAME)
-		{
-			DPRINTF("Incomplete video frame NO[%d] ReadSize[%d] FrmSize[%d] FrmInfoSize[%u]\n", frmNo, outBufSize, outFrmSize, outFrmInfoSize);
 		}
 		else if(ret == AV_ER_SESSION_CLOSE_BY_REMOTE)
 		{
@@ -76,8 +72,11 @@ void *thread_ReceiveVideo(void *arg)
 			DPRINTF("Session cant be used anymore\n");
 			break;
 		}
-
-		if (ret > 0)
+		else if(ret == AV_ER_INCOMPLETE_FRAME)
+		{
+			DPRINTF("Incomplete video frame NO[%d] ReadSize[%d] FrmSize[%d] FrmInfoSize[%u]\n", frmNo, outBufSize, outFrmSize, outFrmInfoSize);
+		}
+		else if (ret < 0)		{			printf("[VIDEO] UNKNOWN ERROR[%d]!!!\n", ret);			break;		}		else if (ret > 0)
 		{
 			AVFrame avFrame = readAvFrame(frameInfo, videoBuffer, &ret);
 
@@ -143,8 +142,7 @@ void *thread_ReceiveAudio(void *arg)
 		}
 		else if (ret < 0)
 		{
-			printf("Other error[%d]!!!\n", ret);
-			continue;
+			printf("[AUDIO] UNKNOWN ERROR[%d]!!!\n", ret);			break;
 		}
 		else
 		{
@@ -175,14 +173,19 @@ int startReceive(int *avIndex) {
 		return 1;
 	}
 
-	if ((ret=pthread_create(&ThreadReceiveAudio_ID, NULL, &thread_ReceiveAudio, avIndex)))
-	{
-		DPRINTF("Create Audio Receive thread failed\n");
-		return 1;
+	if(RUN_AUDIO) { 
+		if ((ret=pthread_create(&ThreadReceiveAudio_ID, NULL, &thread_ReceiveAudio, avIndex)))
+		{
+			DPRINTF("Create Audio Receive thread failed\n");
+			return 1;
+		}
 	}
 
 	if(ThreadReceiveVideo_ID!=0) pthread_join(ThreadReceiveVideo_ID, NULL);
-	if(ThreadReceiveAudio_ID!=0) pthread_join(ThreadReceiveAudio_ID, NULL);
+	
+	if(RUN_AUDIO) { 
+		if(ThreadReceiveAudio_ID!=0) pthread_join(ThreadReceiveAudio_ID, NULL);
+	}
 
 	return 0;
 }

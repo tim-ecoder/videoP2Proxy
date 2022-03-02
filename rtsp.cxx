@@ -23,7 +23,7 @@ extern "C" void* min1(void *) {
 
 	UserAuthenticationDatabase* authDB = NULL;
 
-	RTSPServer* rtspServer = RTSPServer::createNew(*env, 554, authDB);
+	RTSPServer* rtspServer = RTSPServer::createNew(*env, RTSP_PORT, authDB);
 	if (rtspServer == NULL) {
 		*env << "Failed to create RTSP server: " << env->getResultMsg() << "\n";
 		exit(1);
@@ -36,17 +36,22 @@ extern "C" void* min1(void *) {
 
 	int fd = open(MODE_RTSP_FIFO_FILE, O_RDONLY); // open inmediatelly to avoid hanging write process
 	close(fd);
-	int fd2 = open(MODE_RTSP_FIFO_FILE2, O_RDONLY); // open inmediatelly to avoid hanging write process
-	close(fd2);
-		
 	char const* inputFileName = MODE_RTSP_FIFO_FILE;
-	char const* inputFileName2 = MODE_RTSP_FIFO_FILE2;
+	char const* inputFileName2;
+	if(RUN_AUDIO) { 
+		int fd2 = open(MODE_RTSP_FIFO_FILE2, O_RDONLY); // open inmediatelly to avoid hanging write process
+		close(fd2);
+		inputFileName2 = MODE_RTSP_FIFO_FILE2;
+		}
+		
 	OutPacketBuffer::maxSize = 100000;
 	ServerMediaSession* sms
 		= ServerMediaSession::createNew(*env, streamName, streamName,
 		                                descriptionString);
 	sms->addSubsession(MPEG4VideoFileServerMediaSubsession::createNew(*env, inputFileName, reuseFirstSource));
-	sms->addSubsession(WAVAudioFileServerMediaSubsession1::createNew(*env, inputFileName2, reuseFirstSource));
+	if(RUN_AUDIO) { 
+		sms->addSubsession(WAVAudioFileServerMediaSubsession1::createNew(*env, inputFileName2, reuseFirstSource));
+	}
 	rtspServer->addServerMediaSession(sms);
 
 	announceStream(rtspServer, sms, streamName, inputFileName);

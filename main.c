@@ -27,33 +27,35 @@ void print_usage() {
     		"  --cam-login CAMERA-P2P-LOGIN		[Required] Camera p2p login. (SEP-500: \"admin\" hardcoded on camera)\n"
             "  --cam-pass CAMERA-P2P-PASSWORD	[Required] Camera p2p password. (SEP-500: \"000000\" default if not changed)\n"
 			"  --rtsp-port RTSP-PORT         	[OPTIONAL] RTSP server port. If not set DEFAULT: 554\n"
+            "  --audio-enable 0         	    [OPTIONAL] To disable audio stream 0; Default audio enabled.\n"
     );
 }
 
 int main(int argc, char *argv[]) {
 	
-
+RUN_AUDIO = 1;
 
    static struct option long_options[] = {
         {"cam-id",      required_argument, 0,  'i' },
         {"cam-login",   required_argument, 0,  'l' },
 		{"cam-pass",    required_argument, 0,  'p' },
-		{"rtsp-port",   optional_argument, 0,  'r' },
+		{"rtsp-port",   required_argument, 0,  'r' },
+		{"audio-enable",   required_argument, 0,  'd' },
         {0,        0,                 0,  0   }
     };
 
 	char* cam_id = "";
 	char* cam_login = "";
 	char* cam_pass = "";
-	int rtsp_port = 0;
+	RTSP_PORT = 554;
 
-
+//--cam-id LAYDLWRCR5U953N9111A --cam-login admin --cam-pass 111111 --audio-enable 0 --rtsp-port 555
 	
 	int opt = 0;
     int long_index = 0;
 	char optc = 0;
 	
-    while ((opt = getopt_long(argc, argv,"i:l:p:r::", long_options, &long_index )) != -1) 
+    while ((opt = getopt_long(argc, argv,"i:l:p:r:d:", long_options, &long_index )) != -1) 
 	{
 		optc = (char)opt;
 		
@@ -68,7 +70,10 @@ int main(int argc, char *argv[]) {
 				cam_pass = optarg;
                 break;
              case 'r' : 
-				rtsp_port = atoi(optarg);
+				RTSP_PORT = atoi(optarg);
+                break;
+			 case 'd' : 
+				RUN_AUDIO = atoi(optarg);
                 break;
              default: 
 				print_usage();
@@ -86,16 +91,17 @@ int main(int argc, char *argv[]) {
 
 	mkfifo(MODE_RTSP_FIFO_FILE, 0600);
 
+	if(RUN_AUDIO) {
+		char template2[] = "/tmp/videop2proxy_a.XXXXXX";
+		char* tmpDir2 = mkdtemp(template2);
+		char* tmpFile2 = "/fifo";
 
-	char template2[] = "/tmp/videop2proxy_a.XXXXXX";
-	char* tmpDir2 = mkdtemp(template2);
-	char* tmpFile2 = "/fifo";
+		MODE_RTSP_FIFO_FILE2 = malloc(strlen(tmpDir2) + strlen(tmpFile2) + 1);
+		strcat(MODE_RTSP_FIFO_FILE2, tmpDir2);
+		strcat(MODE_RTSP_FIFO_FILE2, tmpFile2);
 
-	MODE_RTSP_FIFO_FILE2 = malloc(strlen(tmpDir2) + strlen(tmpFile2) + 1);
-	strcat(MODE_RTSP_FIFO_FILE2, tmpDir2);
-	strcat(MODE_RTSP_FIFO_FILE2, tmpFile2);
-
-	mkfifo(MODE_RTSP_FIFO_FILE2, 0600);
+		mkfifo(MODE_RTSP_FIFO_FILE2, 0600);
+	}
 
 	
 	pthread_t ThreadRTSP = 0;
@@ -108,17 +114,20 @@ int main(int argc, char *argv[]) {
 
 
 	MODE_RTSP_FIFO = open(MODE_RTSP_FIFO_FILE, O_WRONLY);
-	MODE_RTSP_FIFO2 = open(MODE_RTSP_FIFO_FILE2, O_WRONLY);
+	if(RUN_AUDIO) { 
+		MODE_RTSP_FIFO2 = open(MODE_RTSP_FIFO_FILE2, O_WRONLY);
+	}
 
 
-	DPRINTF("Starting liveMedia server as proxy...\n");
+	DPRINTF("Starting liveMedia-server as proxy to RTSP...\n");
 	int delay = 10;
     while (1)
 	{
-		//clientRun("LAYDLWRCR5U953N9111A", "admin", "111111");
-		clientRun(cam_id, cam_login, cam_pass);
-		DPRINTF("Error, waiting %d seconds and trying again.\n", delay);
-		sleep(delay);
+		if(clientRun(cam_id, cam_login, cam_pass) != 0)
+		{
+			DPRINTF("Error, waiting %d seconds and trying again.\n", delay);
+			sleep(delay);
+		}
 	}
 }
 

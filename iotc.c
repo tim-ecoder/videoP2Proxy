@@ -64,12 +64,13 @@ int startIOTC(int *avIndex) {
     if (ret < 0) {
         return 0;
     }
-
-    ret = avSendIOCtrl(*avIndex, IOTYPE_USER_IPCAM_AUDIOSTART, arr, sizeof(*arr));
-    DPRINTF("startIOTC audio ret=%d\n", ret);
-    if (ret < 0) {
-        return 0;
-    }
+	if(RUN_AUDIO) { 
+		ret = avSendIOCtrl(*avIndex, IOTYPE_USER_IPCAM_AUDIOSTART, arr, sizeof(*arr));
+		DPRINTF("startIOTC audio ret=%d\n", ret);
+		if (ret < 0) {
+		    return 0;
+		}
+	}
 
     return 1;
 }
@@ -85,12 +86,13 @@ int stopIOTC(int *avIndex) {
     if (ret < 0) {
         return 0;
     }
-	
-    ret = avSendIOCtrl(*avIndex, IOTYPE_USER_IPCAM_AUDIOSTOP, arr, sizeof(*arr));
-    DPRINTF("stopIOTC audio ret=%d\n", ret);
-    if (ret < 0) {
-        return 0;
-    }
+	if(RUN_AUDIO) { 
+		ret = avSendIOCtrl(*avIndex, IOTYPE_USER_IPCAM_AUDIOSTOP, arr, sizeof(*arr));
+		DPRINTF("stopIOTC audio ret=%d\n", ret);
+		if (ret < 0) {
+		    return 0;
+		}
+	}
 	
     return 1;
 }
