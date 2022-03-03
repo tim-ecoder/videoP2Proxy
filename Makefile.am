@@ -31,7 +31,8 @@ videop2proxy_SOURCES = \
 	rtsp.h \
 	avframeinfo.h \
 	WAVAudioFileSource.h \
-	WAVAudioFileSource.cxx
+	WAVAudioFileSource.cxx \
+	run.sh
 
 videop2proxy_LDFLAGS = \
 	-Wl,-rpath $(libdir) \

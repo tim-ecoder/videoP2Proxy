@@ -46,6 +46,7 @@ typedef enum {
 class WAVAudioFileSource1: public AudioInputDevice {
 public:
 
+	
   static WAVAudioFileSource1* createNew(UsageEnvironment& env,
 					char const* fileName);
 

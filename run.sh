@@ -1,0 +1,1 @@
+./videop2proxy --cam-id LAYDLWRCR5U953N9111A --cam-login admin --cam-pass 111111

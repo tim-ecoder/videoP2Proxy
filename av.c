@@ -54,27 +54,27 @@ void *thread_ReceiveVideo(void *arg)
 		}
 		else if(ret == AV_ER_LOSED_THIS_FRAME)
 		{
-			DPRINTF("Lost video frame NO[%d]\n", frmNo);
+			DPRINTF("[VIDEO] Lost video frame NO[%d]\n", frmNo);
 			continue;
 		}
 		else if(ret == AV_ER_SESSION_CLOSE_BY_REMOTE)
 		{
-			DPRINTF("AV_ER_SESSION_CLOSE_BY_REMOTE\n");
+			DPRINTF("[VIDEO] AV_ER_SESSION_CLOSE_BY_REMOTE\n");
 			break;
 		}
 		else if(ret == AV_ER_REMOTE_TIMEOUT_DISCONNECT)
 		{
-			DPRINTF("AV_ER_REMOTE_TIMEOUT_DISCONNECT\n");
+			DPRINTF("[VIDEO] AV_ER_REMOTE_TIMEOUT_DISCONNECT\n");
 			break;
 		}
 		else if(ret == IOTC_ER_INVALID_SID)
 		{
-			DPRINTF("Session cant be used anymore\n");
+			DPRINTF("[VIDEO] Session cant be used anymore\n");
 			break;
 		}
 		else if(ret == AV_ER_INCOMPLETE_FRAME)
 		{
-			DPRINTF("Incomplete video frame NO[%d] ReadSize[%d] FrmSize[%d] FrmInfoSize[%u]\n", frmNo, outBufSize, outFrmSize, outFrmInfoSize);
+			DPRINTF("[VIDEO] Incomplete video frame NO[%d] ReadSize[%d] FrmSize[%d] FrmInfoSize[%u]\n", frmNo, outBufSize, outFrmSize, outFrmInfoSize);
 		}
 		else if (ret < 0)		{			printf("[VIDEO] UNKNOWN ERROR[%d]!!!\n", ret);			break;		}		else if (ret > 0)
 		{
@@ -122,27 +122,27 @@ void *thread_ReceiveAudio(void *arg)
 		}
 		if (ret == AV_ER_SESSION_CLOSE_BY_REMOTE)
 		{
-			printf("[thread_ReceiveAudio] AV_ER_SESSION_CLOSE_BY_REMOTE\n");
+			printf("[ReceiveAudio] AV_ER_SESSION_CLOSE_BY_REMOTE\n");
 			break;
 		}
 		else if (ret == AV_ER_REMOTE_TIMEOUT_DISCONNECT)
 		{
-			printf("[thread_ReceiveAudio] AV_ER_REMOTE_TIMEOUT_DISCONNECT\n");
+			printf("[ReceiveAudio] AV_ER_REMOTE_TIMEOUT_DISCONNECT\n");
 			break;
 		}
 		else if (ret == IOTC_ER_INVALID_SID)
 		{
-			printf("[thread_ReceiveAudio] Session cant be used anymore\n");
+			printf("[ReceiveAudio] Session cant be used anymore\n");
 			break;
 		}
 		else if (ret == AV_ER_LOSED_THIS_FRAME)
 		{
-			printf("AV_ER_LOSED_THIS_FRAME[%d]\n", frmNo);
+			printf("[ReceiveAudio] AV_ER_LOSED_THIS_FRAME[%d]\n", frmNo);
 			continue;
 		}
 		else if (ret < 0)
 		{
-			printf("[AUDIO] UNKNOWN ERROR[%d]!!!\n", ret);			break;
+			printf("[ReceiveAudio] UNKNOWN ERROR[%d]!!!\n", ret);			break;
 		}
 		else
 		{
