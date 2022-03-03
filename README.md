@@ -2,19 +2,19 @@
 Proxy to enable Samsung SEP-5002RDP (HANWHA TECHWIN) WISENET P2P (AVAPIs, IOTCAPIs) only cameras to work with RTSP protocol.
 **Works without changing the firmware of the camera, original LCD-screen continue to work.**
 
-*** CAMERA_ID, USER, PASSWORD HARDCODED ***
+*** TESTED ONLY Samsung SEP-5002RDP ***
 *** FOR DEVELOPERS ONLY ***
 *** BUILD WITH ANJUTA ***
 
 **** SOUND IMPLEMENTED ****
-**** SOUND SETTINGS HARDCODED: PCM, 1ch, 8bit, 8000hz****
+**** SOUND SETTINGS HARDCODED: PCM, 1ch, 8bit, 16000Hz****
 **** LINUX ONLY ****
 
 !!!! NOT STABLE !!!!
 
  Known working models
 -----------
-* Samsung SEP-5001RDP
+* Samsung SEP-5002RDP
 
 Quick start on Ubuntu
 -----------
@@ -37,15 +37,14 @@ make
 sudo make install
 ```
 
-##### Run the RTSP proxy
+##### Run the RTSP proxy +[optional] --rtsp-port 555
 ```
-sudo videop2proxy
+sudo videop2proxy --cam-id LAYDLWRCR5U953N9111A --cam-login admin --cam-pass 111111
 ```
 Example output running correctly:
 ```
 Starting proxy...
 Starting RTSP server on "rtsp://192.168.1.2:554/"
-(Using port 8000 for optional RTSP-over-HTTP tunneling.)
 
 [P2P client] starting...
 IOTC_Initialize2...
