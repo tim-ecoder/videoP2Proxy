@@ -42,10 +42,11 @@ sudo make install
 ```
 
 ##### Run the RTSP proxy 
-###### other commandline arguments [optional] --rtsp-port 555 [optional] --audio-enable 0
 ```
 sudo videop2proxy --cam-id LAYDLWRCR5U953N9111A --cam-login admin --cam-pass 111111
 ```
+Other commandline arguments [optional] --rtsp-port 555 [optional] --audio-enable 0
+
 Example output running correctly:
 ```
 Starting P2P-camera to RTSP proxy-server
