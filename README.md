@@ -48,19 +48,23 @@ sudo videop2proxy --cam-id LAYDLWRCR5U953N9111A --cam-login admin --cam-pass 111
 ```
 Example output running correctly:
 ```
-Starting proxy...
-Starting RTSP server on "rtsp://192.168.1.2:554/"
+Starting P2P-camera to RTSP proxy-server
+[P2P] Client starting
+[P2P] IOTC_Initialize2...
+[liveMedia] Add MPEG4VideoFileServerMediaSubsession on fifo pipe: /tmp/videop2proxy_v.853yuV/fifo
+[liveMedia] Add WAVAudioFileServerMediaSubsession1 on fifo pipe: /tmp/videop2proxy_a.czo5oY/fifo
+[liveMedia] Starting RTSP server on "rtsp://172.17.20.66/"
+[P2P] IOTC_Connect_ByUID_Parallel... SID:0
+[P2P] avClientStart2 UID: LAYDLWRCR5U953N9111A userName: admin passWord: 111111
+[P2P] avClientStart2 mAvIndex=0
+[P2P] startIOTC video ret=0
+[P2P] startIOTC audio ret=0
+[P2P] Client running...
+[P2P][ReceiveVideo] Write to fifo pipe: 3
+[P2P][ReceiveAudio] Write to fifo pipe: 6
+[P2P][ReceiveAudio] Running...
+[P2P][ReceiveVideo] Running...
 
-[P2P client] starting...
-IOTC_Initialize2...
-IOTC_Connect_ByUID_Parallel... SID:0
-avClientStart2... userName: c8da138df16 passWord: a1c8da1df11a
-avClientStart2 mAvIndex=0
-startIOTC video ret=0
-startIOTC audio ret=0
-[P2P client] running
-[ReceiveVideo] Running
-[ReceiveAudio] Running
 ```
 
 
