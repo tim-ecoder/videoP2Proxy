@@ -71,7 +71,11 @@ Starting P2P-camera to RTSP proxy-server
 
 Original made by and thanks
 -----------
-
+MAIN BASE: VIDEO AND RTSP
+https://github.com/miguelangel-nubla/videoP2Proxy
 Was this useful to you? Consider donating  
 @PayPal: miguelangel.nubla@gmail.com  
 @bitcoin: bc1q2s5jdm7vem8ygv2fgxtfukmxuruyfsqjrexk3c
+
+AUDIO:
+https://github.com/leejansq/p2p
