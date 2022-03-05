@@ -26,7 +26,8 @@ AVFrame lastFrame = {
 
 void *thread_ReceiveVideo(void *arg)
 {
-	DPRINTF("[ReceiveVideo] Running...\n");
+	DPRINTF("[P2P][ReceiveVideo] Write to fifo pipe: %d\n", MODE_RTSP_FIFO);
+	DPRINTF("[P2P][ReceiveVideo] Running...\n");
 
 	setvbuf(stdout, NULL, _IONBF, 0);
 
@@ -54,29 +55,29 @@ void *thread_ReceiveVideo(void *arg)
 		}
 		else if(ret == AV_ER_LOSED_THIS_FRAME)
 		{
-			DPRINTF("[ReceiveVideo] Lost video frame NO[%d]\n", frmNo);
+			DPRINTF("[P2P][ReceiveVideo] Lost video frame NO[%d]\n", frmNo);
 			continue;
 		}
 		else if(ret == AV_ER_SESSION_CLOSE_BY_REMOTE)
 		{
-			DPRINTF("[ReceiveVideo] AV_ER_SESSION_CLOSE_BY_REMOTE\n");
+			DPRINTF("[P2P][ReceiveVideo] AV_ER_SESSION_CLOSE_BY_REMOTE\n");
 			break;
 		}
 		else if(ret == AV_ER_REMOTE_TIMEOUT_DISCONNECT)
 		{
-			DPRINTF("[ReceiveVideo] AV_ER_REMOTE_TIMEOUT_DISCONNECT\n");
+			DPRINTF("[P2P][ReceiveVideo] AV_ER_REMOTE_TIMEOUT_DISCONNECT\n");
 			break;
 		}
 		else if(ret == IOTC_ER_INVALID_SID)
 		{
-			DPRINTF("[ReceiveVideo] Session cant be used anymore\n");
+			DPRINTF("[P2P][ReceiveVideo] Session cant be used anymore\n");
 			break;
 		}
 		else if(ret == AV_ER_INCOMPLETE_FRAME)
 		{
-			DPRINTF("[ReceiveVideo] Incomplete video frame NO[%d] ReadSize[%d] FrmSize[%d] FrmInfoSize[%u]\n", frmNo, outBufSize, outFrmSize, outFrmInfoSize);
+			DPRINTF("[P2P][ReceiveVideo] Incomplete video frame NO[%d] ReadSize[%d] FrmSize[%d] FrmInfoSize[%u]\n", frmNo, outBufSize, outFrmSize, outFrmInfoSize);
 		}
-		else if (ret < 0)		{			printf("[ReceiveVideo] Unknown error code=%d\n", ret);			break;		}		else if (ret > 0)
+		else if (ret < 0)		{			printf("[P2P][ReceiveVideo] Unknown error code=%d\n", ret);			break;		}		else if (ret > 0)
 		{
 			AVFrame avFrame = readAvFrame(frameInfo, videoBuffer, &ret);
 
@@ -86,7 +87,7 @@ void *thread_ReceiveVideo(void *arg)
 			}
 		}
 	}
-	DPRINTF("[ReceiveVideo] Thread exit\n");
+	DPRINTF("[P2P][ReceiveVideo] Thread exit\n");
 	return 0;
 }
 
@@ -94,14 +95,13 @@ void *thread_ReceiveAudio(void *arg)
 {
 
 	int avIndex = *(int *)arg;
-
-	printf("[ReceiveAudio] Running...\n");
+	printf("[P2P][ReceiveAudio] Write to fifo pipe: %d\n", MODE_RTSP_FIFO2);
+	printf("[P2P][ReceiveAudio] Running...\n");
 
 	char buf[AUDIO_BUF_SIZE];
 	FRAMEINFO_t frameInfo;
 	unsigned int frmNo;
 	int ret;
-	//printf("Start IPCAM audio stream OK![%d]\n", avIndex);
 	while (1)
 	{
 		/*
@@ -122,27 +122,27 @@ void *thread_ReceiveAudio(void *arg)
 		}
 		if (ret == AV_ER_SESSION_CLOSE_BY_REMOTE)
 		{
-			printf("[ReceiveAudio] AV_ER_SESSION_CLOSE_BY_REMOTE\n");
+			printf("[P2P][ReceiveAudio] AV_ER_SESSION_CLOSE_BY_REMOTE\n");
 			break;
 		}
 		else if (ret == AV_ER_REMOTE_TIMEOUT_DISCONNECT)
 		{
-			printf("[ReceiveAudio] AV_ER_REMOTE_TIMEOUT_DISCONNECT\n");
+			printf("[P2P][ReceiveAudio] AV_ER_REMOTE_TIMEOUT_DISCONNECT\n");
 			break;
 		}
 		else if (ret == IOTC_ER_INVALID_SID)
 		{
-			printf("[ReceiveAudio] Session cant be used anymore\n");
+			printf("[P2P][ReceiveAudio] Session cant be used anymore\n");
 			break;
 		}
 		else if (ret == AV_ER_LOSED_THIS_FRAME)
 		{
-			printf("[ReceiveAudio] AV_ER_LOSED_THIS_FRAME[%d]\n", frmNo);
+			printf("[P2P][ReceiveAudio] AV_ER_LOSED_THIS_FRAME[%d]\n", frmNo);
 			continue;
 		}
 		else if (ret < 0)
 		{
-			printf("[ReceiveAudio] Unknown error code=%d\n", ret);			break;
+			printf("[P2P][ReceiveAudio] Unknown error code=%d\n", ret);			break;
 		}
 		else
 		{
@@ -159,7 +159,7 @@ void *thread_ReceiveAudio(void *arg)
 		}
 
 	}
-	DPRINTF("[ReceiveAudio] Thread exit\n");
+	DPRINTF("[P2P][ReceiveAudio] Thread exit\n");
 	return 0;
 }
 

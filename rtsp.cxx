@@ -46,10 +46,11 @@ extern "C" void* min1(void *) {
 		
 	OutPacketBuffer::maxSize = 100000;
 	ServerMediaSession* sms
-		= ServerMediaSession::createNew(*env, streamName, streamName,
-		                                descriptionString);
+		= ServerMediaSession::createNew(*env, streamName, streamName, descriptionString);
+	*env << "[liveMedia] Add MPEG4VideoFileServerMediaSubsession on fifo pipe: " << inputFileName << "\n";
 	sms->addSubsession(MPEG4VideoFileServerMediaSubsession::createNew(*env, inputFileName, reuseFirstSource));
 	if(RUN_AUDIO) { 
+		*env << "[liveMedia] Add WAVAudioFileServerMediaSubsession1 on fifo pipe: " << inputFileName2 << "\n";
 		sms->addSubsession(WAVAudioFileServerMediaSubsession1::createNew(*env, inputFileName2, reuseFirstSource));
 	}
 	rtspServer->addServerMediaSession(sms);
