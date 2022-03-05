@@ -7,7 +7,7 @@
 #include "include/AVAPIs.h"
 #include "include/AVIOCTRLDEFs.h"
 
-int enterIOTC(int *avIndex, char *p2p_id, char *userName, char *passWord) {
+int enterIOTC(int *avIndex, char *p2p_id, char *userName, char *passWord, int *sid) {
     DPRINTF("IOTC_Initialize2...\n");
     int mRet = IOTC_Initialize2(0);
 
@@ -30,7 +30,8 @@ int enterIOTC(int *avIndex, char *p2p_id, char *userName, char *passWord) {
         DPRINTF("IOTC_Get_SessionID ERROR %d\n", SID);
         return 0;
     }
-
+	*sid = SID;
+	
     mRet = IOTC_Connect_ByUID_Parallel(p2p_id, SID);
     if (mRet < 0) {
         DPRINTF("IOTC_Connect_ByUID_Parallel ERROR %d\n", SID);
@@ -44,7 +45,7 @@ int enterIOTC(int *avIndex, char *p2p_id, char *userName, char *passWord) {
     DPRINTF("avClientStart2... ");
     DPRINTF("userName: %s passWord: %s\n", userName, passWord);
 
-    *avIndex = avClientStart2(SID, userName, passWord, 5000, &srvType, 0, &bResend);
+    *avIndex = avClientStart2(SID, userName, passWord, 1000, &srvType, 0, &bResend);
     if (avIndex < 0) {
     	DPRINTF("avClientStart2 ERROR %d\n", *avIndex);
         return 0;
