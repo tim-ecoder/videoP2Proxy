@@ -8,7 +8,7 @@
 #include "include/AVIOCTRLDEFs.h"
 
 int enterIOTC(int *avIndex, char *p2p_id, char *userName, char *passWord, int *sid) {
-    DPRINTF("IOTC_Initialize2...\n");
+    DPRINTF("[P2P] IOTC_Initialize2...\n");
     int mRet = IOTC_Initialize2(0);
 
     if (mRet == -3) {
@@ -16,42 +16,41 @@ int enterIOTC(int *avIndex, char *p2p_id, char *userName, char *passWord, int *s
     }
 
     if (mRet != 0) {
-        DPRINTF("IOTC_Initialize2 ERROR %d\n", mRet);
+        DPRINTF("[P2P] IOTC_Initialize2 ERROR %d\n", mRet);
         return 0;
     }
 
     mRet = avInitialize(3);
     if (mRet < 0) {
-        DPRINTF("avInitialize ERROR %d\n", mRet);
+        DPRINTF("[P2P] avInitialize ERROR %d\n", mRet);
         return 0;
     }
     int SID = IOTC_Get_SessionID();
     if (SID < 0) {
-        DPRINTF("IOTC_Get_SessionID ERROR %d\n", SID);
+        DPRINTF("[P2P] IOTC_Get_SessionID ERROR %d\n", SID);
         return 0;
     }
 	*sid = SID;
 	
     mRet = IOTC_Connect_ByUID_Parallel(p2p_id, SID);
     if (mRet < 0) {
-        DPRINTF("IOTC_Connect_ByUID_Parallel ERROR %d\n", SID);
+        DPRINTF("[P2P] IOTC_Connect_ByUID_Parallel ERROR %d\n", SID);
         return 0;
     }
-    DPRINTF("IOTC_Connect_ByUID_Parallel... SID:%d\n", SID);
+    DPRINTF("[P2P] IOTC_Connect_ByUID_Parallel... SID:%d\n", SID);
 
     unsigned int srvType = 1;
     int bResend = 1;
 
-    DPRINTF("avClientStart2... ");
-    DPRINTF("userName: %s passWord: %s\n", userName, passWord);
+    DPRINTF("[P2P] avClientStart2 UID: %s userName: %s passWord: %s\n", p2p_id, userName, passWord);
 
     *avIndex = avClientStart2(SID, userName, passWord, 1000, &srvType, 0, &bResend);
     if (avIndex < 0) {
-    	DPRINTF("avClientStart2 ERROR %d\n", *avIndex);
+    	DPRINTF("[P2P] avClientStart2 ERROR %d\n", *avIndex);
         return 0;
     }
 
-	DPRINTF("avClientStart2 mAvIndex=%d\n", *avIndex);
+	DPRINTF("[P2P] avClientStart2 mAvIndex=%d\n", *avIndex);
     return 1;
 }
 
@@ -61,13 +60,13 @@ int startIOTC(int *avIndex) {
     const char *arr = json_object_to_json_string(obj);
 
     int ret = avSendIOCtrl(*avIndex, IOTYPE_USER_IPCAM_START, arr, sizeof(*arr));
-    DPRINTF("startIOTC video ret=%d\n", ret);
+    DPRINTF("[P2P] startIOTC video ret=%d\n", ret);
     if (ret < 0) {
         return 0;
     }
 	if(RUN_AUDIO) { 
 		ret = avSendIOCtrl(*avIndex, IOTYPE_USER_IPCAM_AUDIOSTART, arr, sizeof(*arr));
-		DPRINTF("startIOTC audio ret=%d\n", ret);
+		DPRINTF("[P2P] startIOTC audio ret=%d\n", ret);
 		if (ret < 0) {
 		    return 0;
 		}
@@ -83,13 +82,13 @@ int stopIOTC(int *avIndex) {
     const char *arr = json_object_to_json_string(obj);
 
     int ret = avSendIOCtrl(*avIndex, IOTYPE_USER_IPCAM_STOP, arr, sizeof(*arr));
-    DPRINTF("stopIOTC video ret=%d\n", ret);
+    DPRINTF("[P2P] stopIOTC video ret=%d\n", ret);
     if (ret < 0) {
         return 0;
     }
 	if(RUN_AUDIO) { 
 		ret = avSendIOCtrl(*avIndex, IOTYPE_USER_IPCAM_AUDIOSTOP, arr, sizeof(*arr));
-		DPRINTF("stopIOTC audio ret=%d\n", ret);
+		DPRINTF("[P2P] stopIOTC audio ret=%d\n", ret);
 		if (ret < 0) {
 		    return 0;
 		}
@@ -100,10 +99,10 @@ int stopIOTC(int *avIndex) {
 
 int quitIOTC(int *avIndex, int *SID) {
     avClientStop(*avIndex);
-    DPRINTF("avClientStop avIndex=%d\n", *avIndex);
+    DPRINTF("[P2P] avClientStop avIndex=%d\n", *avIndex);
 
     IOTC_Session_Close(*SID);
-	DPRINTF("IOTC_Session_Close SID %d\n", *SID);
+	DPRINTF("[P2P] IOTC_Session_Close SID %d\n", *SID);
 
 	return 1;
 }

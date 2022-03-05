@@ -15,7 +15,7 @@
 int FRAME_INFO_SIZE = 64;
 int VIDEO_BUF_SIZE = 400000;
 
-#define AUDIO_BUF_SIZE 1024
+#define AUDIO_BUF_SIZE 1280
 
 extern void CArrayToGoArray();
 
@@ -54,29 +54,29 @@ void *thread_ReceiveVideo(void *arg)
 		}
 		else if(ret == AV_ER_LOSED_THIS_FRAME)
 		{
-			DPRINTF("[VIDEO] Lost video frame NO[%d]\n", frmNo);
+			DPRINTF("[ReceiveVideo] Lost video frame NO[%d]\n", frmNo);
 			continue;
 		}
 		else if(ret == AV_ER_SESSION_CLOSE_BY_REMOTE)
 		{
-			DPRINTF("[VIDEO] AV_ER_SESSION_CLOSE_BY_REMOTE\n");
+			DPRINTF("[ReceiveVideo] AV_ER_SESSION_CLOSE_BY_REMOTE\n");
 			break;
 		}
 		else if(ret == AV_ER_REMOTE_TIMEOUT_DISCONNECT)
 		{
-			DPRINTF("[VIDEO] AV_ER_REMOTE_TIMEOUT_DISCONNECT\n");
+			DPRINTF("[ReceiveVideo] AV_ER_REMOTE_TIMEOUT_DISCONNECT\n");
 			break;
 		}
 		else if(ret == IOTC_ER_INVALID_SID)
 		{
-			DPRINTF("[VIDEO] Session cant be used anymore\n");
+			DPRINTF("[ReceiveVideo] Session cant be used anymore\n");
 			break;
 		}
 		else if(ret == AV_ER_INCOMPLETE_FRAME)
 		{
-			DPRINTF("[VIDEO] Incomplete video frame NO[%d] ReadSize[%d] FrmSize[%d] FrmInfoSize[%u]\n", frmNo, outBufSize, outFrmSize, outFrmInfoSize);
+			DPRINTF("[ReceiveVideo] Incomplete video frame NO[%d] ReadSize[%d] FrmSize[%d] FrmInfoSize[%u]\n", frmNo, outBufSize, outFrmSize, outFrmInfoSize);
 		}
-		else if (ret < 0)		{			printf("[VIDEO] UNKNOWN ERROR[%d]!!!\n", ret);			break;		}		else if (ret > 0)
+		else if (ret < 0)		{			printf("[ReceiveVideo] Unknown error code=%d\n", ret);			break;		}		else if (ret > 0)
 		{
 			AVFrame avFrame = readAvFrame(frameInfo, videoBuffer, &ret);
 
@@ -142,7 +142,7 @@ void *thread_ReceiveAudio(void *arg)
 		}
 		else if (ret < 0)
 		{
-			printf("[ReceiveAudio] UNKNOWN ERROR[%d]!!!\n", ret);			break;
+			printf("[ReceiveAudio] Unknown error code=%d\n", ret);			break;
 		}
 		else
 		{
@@ -169,14 +169,14 @@ int startReceive(int *avIndex) {
 	int ret;
 	if ((ret=pthread_create(&ThreadReceiveVideo_ID, NULL, &thread_ReceiveVideo, avIndex)))
 	{
-		DPRINTF("Create Video Receive thread failed\n");
+		DPRINTF("[P2P] Create Video Receive thread failed\n");
 		return 1;
 	}
 
 	if(RUN_AUDIO) { 
 		if ((ret=pthread_create(&ThreadReceiveAudio_ID, NULL, &thread_ReceiveAudio, avIndex)))
 		{
-			DPRINTF("Create Audio Receive thread failed\n");
+			DPRINTF("[P2P] Create Audio Receive thread failed\n");
 			return 1;
 		}
 	}

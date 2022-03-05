@@ -25,7 +25,7 @@ extern "C" void* min1(void *) {
 
 	RTSPServer* rtspServer = RTSPServer::createNew(*env, RTSP_PORT, authDB);
 	if (rtspServer == NULL) {
-		*env << "Failed to create RTSP server: " << env->getResultMsg() << "\n";
+		*env << "[liveMedia] Failed to create RTSP server: " << env->getResultMsg() << "\n";
 		exit(1);
 	}
 
@@ -63,7 +63,7 @@ static void announceStream(RTSPServer* rtspServer, ServerMediaSession* sms,
                            char const* streamName, char const* inputFileName) {
 	char* url = rtspServer->rtspURL(sms);
 	UsageEnvironment& env = rtspServer->envir();
-	env << "Starting RTSP server on \"" << url << "\"\n";
+	env << "[liveMedia] Starting RTSP server on \"" << url << "\"\n";
 	delete[] url;
 }
 

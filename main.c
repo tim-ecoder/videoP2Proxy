@@ -126,13 +126,13 @@ RUN_AUDIO = 1;
 	}
 
 
-	int delay = 10;
+	int delay = 15;
     while (1)
 	{
-		DPRINTF("[P2P client] starting...\n");
+		DPRINTF("[P2P] Client starting\n");
 		if(clientRun(cam_id, cam_login, cam_pass) != 0)
 		{
-			DPRINTF("Error, waiting %d seconds and trying again.\n", delay);
+			DPRINTF("[P2P] Client error, waiting %d seconds and trying again.\n", delay);
 			sleep(delay);
 		}
 	}
