@@ -15,7 +15,7 @@
 int FRAME_INFO_SIZE = 64;
 int VIDEO_BUF_SIZE = 400000;
 
-#define AUDIO_BUF_SIZE 1280
+#define AUDIO_BUF_SIZE 1024
 
 extern void CArrayToGoArray();
 
