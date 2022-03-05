@@ -4,7 +4,7 @@ Proxy to enable Samsung SEP-5002RDP (HANWHA TECHWIN) WISENET P2P (AVAPIs, IOTCAP
 
 *** TESTED ONLY Samsung SEP-5002RDP BABY CAMERA ***
 
-**** SOUND IS NOW IMPLEMENTED (Original miguelangel.nubla did not implemet sound) ****
+**** SOUND IS NOW IMPLEMENTED (Original miguelangel.nubla did not implement sound) ****
 
 **** SOUND SETTINGS HARDCODED: PCM, 1ch, 8bit, 16000Hz****
 
