@@ -3,6 +3,7 @@ Proxy to enable Samsung SEP-5002RDP (HANWHA TECHWIN) WISENET P2P (AVAPIs, IOTCAP
 **Works without changing the firmware of the camera, original LCD-screen continue to work.**
 
 *** TESTED ONLY Samsung SEP-5002RDP ***
+
 *** FOR DEVELOPERS ONLY ***
 *** BUILD WITH ANJUTA ***
 
