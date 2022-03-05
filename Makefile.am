@@ -32,7 +32,8 @@ videop2proxy_SOURCES = \
 	avframeinfo.h \
 	WAVAudioFileSource.h \
 	WAVAudioFileSource.cxx \
-	run.sh
+	run.sh \
+	Dockerfile
 
 videop2proxy_LDFLAGS = \
 	-Wl,-rpath $(libdir) \
