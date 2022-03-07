@@ -18,7 +18,7 @@ Proxy to enable Samsung SEP-5002RDP (HANWHA TECHWIN) WISENET P2P (AVAPIs, IOTCAP
 
  Known BUG-s
 -----------
-* Synology Surveillance does not recognize sound settings from liveMedia sink (try to rtsp-proxy and re-encode with ffmpeg (ffserver))
+* Synology Surveillance does not recognize sound settings from liveMedia sink (try to rtsp-proxy and re-encode with ffmpeg (ffserver) WORKING CONFIG: input: -c:a pcm_u8 output: -vcodec copy -acodec pcm_mulaw )
 
 Quick start on Ubuntu
 -----------
@@ -67,6 +67,14 @@ Starting P2P-camera to RTSP proxy-server
 [P2P][ReceiveVideo] Running...
 
 ```
+
+Docker image
+-----------
+https://hub.docker.com/repository/docker/ecodertim/videop2proxy
+
+Working FFMPEG+FFSERVER for re-encoding (and thanks to author)
+-----------
+https://registry.hub.docker.com/r/flaviostutz/rtsp-relay/
 
 
 Original made by and thanks
