@@ -45,6 +45,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
 COPY --from=build-env /videop2proxy/videop2proxy_0.0.1-1_amd64.deb /tmp
 RUN dpkg -i /tmp/videop2proxy_0.0.1-1_amd64.deb
 
-ENTRYPOINT [ "videop2proxy", "--rtsp-port", "554", "--cam-login", "admin" ]
-CMD [ "--cam-pass", "000000" ]
+ENTRYPOINT [ "videop2proxy" ]
+CMD [ "--rtsp-port", "554", "--cam-login", "admin",  "--cam-pass", "000000" ]
 EXPOSE 554/tcp
